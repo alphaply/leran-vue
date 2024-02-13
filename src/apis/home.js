@@ -16,3 +16,15 @@ export function getBannerAPI(){
     return httpInstance.get('/home/banner')
 
 }
+
+
+/**
+ * @description: 获取所有商品模块
+ * @param {*}
+ * @return {*}
+ */
+export const getGoodsAPI = () => {
+    return httpInstance({
+        url: '/home/goods'
+    })
+}
