@@ -2,18 +2,23 @@ import httpInstance from "@/utils/http.js";
 
 export const findNewAPI = () => {
     return httpInstance({
-        url:'/home/new'
+        url: '/home/new'
     })
 }
 export const findHotAPI = () => {
     return httpInstance({
-        url:'/home/hot'
+        url: '/home/hot'
     })
 }
 
 //获取轮播图数据
-export function getBannerAPI(){
-    return httpInstance.get('/home/banner')
+export function getBannerAPI(params = {}) {
+    const {distributionSite = '1'} = params
+    return httpInstance.get('/home/banner', {
+        params: {
+            distributionSite
+        }
+    })
 
 }
 
