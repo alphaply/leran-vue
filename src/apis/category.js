@@ -10,3 +10,11 @@ export function getCategoryAPI(id){
     })
 }
 
+export function getSubCategoryAPI(id){
+    return request({
+        url:'/category/sub/filter',
+        params:{
+            id
+        }
+    })
+}
