@@ -7,6 +7,7 @@ const categoryStore = useCategoryStore()
 </script>
 
 <template>
+
   <header class='app-header'>
     <div class="container">
       <h1 class="logo">
