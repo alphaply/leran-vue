@@ -3,7 +3,7 @@ import {getDetailAPI} from '@/apis/detail.js'
 import {ref, onMounted} from 'vue'
 import {useRoute} from 'vue-router'
 import DetailHot from './components/DetailHot.vue'
-import ImageView from '@/components/ImageView/index.vue'
+
 
 
 
@@ -17,6 +17,13 @@ const getGoods = async () => {
 onMounted(() => {
   getGoods()
 })
+
+
+//sku组件的change事件
+const skuchange = (sku) => {
+  console.log(sku)
+}
+
 
 </script>
 
@@ -39,7 +46,8 @@ onMounted(() => {
           <div class="goods-info">
             <div class="media">
               <!-- 图片预览区 -->
-          <ImageView :image-list="goods.mainPictures"/>
+
+              <XtxImageView :image-list="goods.mainPictures"/>
               <!-- 统计数量 -->
               <ul class="goods-sales">
                 <li>
@@ -88,7 +96,7 @@ onMounted(() => {
                 </dl>
               </div>
               <!-- sku组件 -->
-
+              <XtxSku :goods="goods" @change="skuchange"/>
               <!-- 数据组件 -->
 
               <!-- 按钮组件 -->
@@ -122,9 +130,9 @@ onMounted(() => {
             </div>
             <!-- 24热榜+专题推荐 -->
             <div class="goods-aside">
-<!--              24-->
+              <!--              24-->
               <DetailHot :hot-type="1"/>
-<!--              周-->
+              <!--              周-->
               <DetailHot :hot-type="2"/>
             </div>
           </div>
