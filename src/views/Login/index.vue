@@ -1,5 +1,11 @@
 <script setup>
 import {ref} from 'vue'
+import {loginAPI} from '@/apis/user.js'
+import {ElMessage} from 'element-plus'
+import 'element-plus/es/components/message/style/css'
+import {useRouter} from 'vue-router'
+
+
 
 const form = ref({
   account: '',
@@ -8,12 +14,20 @@ const form = ref({
 })
 
 const formEL = ref(null)
+const router = useRouter()
 const doLogin = () => {
-  formEL.value.validate((valid) => {
+
+  const {account, password} = form.value
+  formEL.value.validate(async (valid) => {
     if (valid) {
-      console.log('登录成功')
-    } else {
-      console.log('登录失败')
+      // console.log('登录成功')
+      const res = await loginAPI({account, password})
+      console.log(res)
+    //   提示用户
+      ElMessage.success('登录成功')
+    //   跳转到首页
+      router.replace({path:'/'})
+
     }
   })
 }
