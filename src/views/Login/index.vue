@@ -1,11 +1,11 @@
 <script setup>
 import {ref} from 'vue'
-import {loginAPI} from '@/apis/user.js'
 import {ElMessage} from 'element-plus'
 import 'element-plus/es/components/message/style/css'
 import {useRouter} from 'vue-router'
+import {useUserStore} from "@/stores/user.js";
 
-
+const userStore = useUserStore()
 
 const form = ref({
   account: '',
@@ -21,8 +21,7 @@ const doLogin = () => {
   formEL.value.validate(async (valid) => {
     if (valid) {
       // console.log('登录成功')
-      const res = await loginAPI({account, password})
-      console.log(res)
+      await userStore.getUserInfo({account, password})
     //   提示用户
       ElMessage.success('登录成功')
     //   跳转到首页

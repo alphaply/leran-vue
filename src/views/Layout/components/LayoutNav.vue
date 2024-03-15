@@ -1,4 +1,19 @@
 <script setup>
+//适配思路：登录时候显示第一块
+//非登录时候显示第二块
+//关键就是是否有token
+import {useUserStore} from '@/stores/user'
+import {useRouter} from 'vue-router'
+const router = useRouter()
+const UserStore = useUserStore()
+
+const confirm=()=>{
+  // console.log('退出登录')
+  //清楚当前用户信息
+  UserStore.clearUserInfo()
+  //跳转到登录页
+  router.push('/login')
+}
 
 </script>
 
@@ -7,10 +22,10 @@
     <div class="container">
       <ul>
         //多模板渲染
-        <template v-if="false">
-          <li><a href="javascript;"><i class="iconfont icon-user"></i>周杰伦</a></li>
+        <template v-if="UserStore.userInfo.token">
+          <li><a href="javascript:;"><i class="iconfont icon-user"></i>{{ UserStore.userInfo.account }}</a></li>
           <li>
-            <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
+            <el-popconfirm @confirm="confirm" title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
               <template #reference>
                 <a href="javascript:;">退出登录</a>
               </template>
@@ -33,11 +48,13 @@
 <style scoped lang="scss">
 .app-topnav {
   background: #333;
+
   ul {
     display: flex;
     height: 53px;
     justify-content: flex-end;
     align-items: center;
+
     li {
       a {
         padding: 0 15px;
@@ -55,7 +72,7 @@
         }
       }
 
-      ~li {
+      ~ li {
         a {
           border-left: 2px solid #666;
         }
