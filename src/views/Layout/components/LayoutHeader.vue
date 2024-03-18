@@ -1,5 +1,5 @@
 <script setup>
-
+import HeaderCart from "@/views/Layout/components/HeaderCart.vue";
 // import {onMounted,ref} from 'vue'
 import {useCategoryStore} from "@/stores/category.js";
 const categoryStore = useCategoryStore()
@@ -30,6 +30,7 @@ const categoryStore = useCategoryStore()
       </div>
       <!-- 头部购物车 -->
 
+<HeaderCart/>
     </div>
   </header>
 </template>

@@ -18,9 +18,23 @@ export const useCartStore = defineStore('cart', () => {
         }
     }
 
+    const delCart=(skuId)=>{
+        //删除购物车操作,在数组中删除某一项
+        //找到下标志，删除，或者使用过滤方法
+
+        //1,找到下标
+        const idx = cartList.value.findIndex((item)=>skuId===item.skuId)
+        cartList.value.splice(idx,1)
+
+        //2,使用过滤方法
+        // cartList.value = cartList.value.filter((item)=>skuId!==item.skuId)
+
+    }
+
     return {
         cartList,
-        addCart
+        addCart,
+        delCart
     }
 }, {
     persist: true
