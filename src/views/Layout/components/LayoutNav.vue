@@ -2,7 +2,7 @@
 //适配思路：登录时候显示第一块
 //非登录时候显示第二块
 //关键就是是否有token
-import {useUserStore} from '@/stores/user'
+import {useUserStore} from '@/stores/userStore.js'
 import {useRouter} from 'vue-router'
 const router = useRouter()
 const UserStore = useUserStore()
