@@ -1,19 +1,21 @@
 <script setup>
-import {getCheckInfoAPI} from "@/apis/checkout.js";
+import {getCheckInfoAPI, createOrderAPI} from "@/apis/checkout.js";
 import {onMounted, ref} from "vue";
+import {useRouter} from "vue-router";
+import {useCartStore} from "@/stores/cartStore.js";
 
-
-const curAddress =  ref({})
+const router = useRouter()
+const cartStore = useCartStore()
+const curAddress = ref({})
 const checkInfo = ref({})  // 订单对象
 
 const getCheckInfo = async () => {
-  const res  = await getCheckInfoAPI();
+  const res = await getCheckInfoAPI();
   checkInfo.value = res.result;
 
   //默认地址
   // 从地址中筛选出来
   curAddress.value = checkInfo.value.userAddresses.find(item => item.isDefault === 0)
-
 
 
 }
@@ -24,7 +26,48 @@ onMounted(() => {
 
 
 //控制弹窗打开
- const showDialog = ref(false)
+const showDialog = ref(false)
+
+
+const activeAddress = ref({})
+//切换地址回调
+const switchAddress = (item) => {
+  activeAddress.value = item
+
+}
+
+const confirm = () => {
+  curAddress.value = activeAddress.value
+  showDialog.value = false
+}
+
+//创建订单
+const createOrder = async () => {
+  const res = await createOrderAPI({
+    deliveryTime: 1,
+    payType: 1,
+    payChannel: 1,
+    buyerMessage: '',
+    goods: checkInfo.value.goods.map(item => {
+      return {
+        skuId: item.skuId,
+        count: item.count
+      }
+    }),
+    addressId: curAddress.value.id
+  })
+  const orderId = res.result.id
+//跳转到支付页面
+  await router.push({
+    path: '/pay',
+    query: {
+      id: orderId
+    }
+  })
+  //更新购物车
+  await cartStore.updateNewList()
+
+}
 
 
 </script>
@@ -40,7 +83,7 @@ onMounted(() => {
             <div class="text">
               <div class="none" v-if="!curAddress">您需要先添加收货地址才可提交订单。</div>
               <ul v-else>
-                <li><span>收<i />货<i />人：</span>{{ curAddress.receiver }}</li>
+                <li><span>收<i/>货<i/>人：</span>{{ curAddress.receiver }}</li>
                 <li><span>联系方式：</span>{{ curAddress.contact }}</li>
                 <li><span>收货地址：</span>{{ curAddress.fullLocation }} {{ curAddress.address }}</li>
               </ul>
@@ -121,7 +164,7 @@ onMounted(() => {
         </div>
         <!-- 提交订单 -->
         <div class="submit">
-          <el-button type="primary" size="large" >提交订单</el-button>
+          <el-button type="primary" size="large" @click="createOrder">提交订单</el-button>
         </div>
       </div>
     </div>
@@ -130,9 +173,10 @@ onMounted(() => {
 
   <el-dialog v-model="showDialog" title="切换收货地址" width="30%" center>
     <div class="addressWrapper">
-      <div class="text item" v-for="item in checkInfo.userAddresses"  :key="item.id">
+      <div class="text item" :class="{active:activeAddress.id===item.id}" @click="switchAddress(item)"
+           v-for="item in checkInfo.userAddresses" :key="item.id">
         <ul>
-          <li><span>收<i />货<i />人：</span>{{ item.receiver }} </li>
+          <li><span>收<i/>货<i/>人：</span>{{ item.receiver }}</li>
           <li><span>联系方式：</span>{{ item.contact }}</li>
           <li><span>收货地址：</span>{{ item.fullLocation + item.address }}</li>
         </ul>
@@ -141,7 +185,7 @@ onMounted(() => {
     <template #footer>
     <span class="dialog-footer">
       <el-button>取消</el-button>
-      <el-button type="primary">确定</el-button>
+      <el-button type="primary" @click="confirm">确定</el-button>
     </span>
     </template>
   </el-dialog>
@@ -189,7 +233,7 @@ onMounted(() => {
       width: 100%;
     }
 
-    >ul {
+    > ul {
       flex: 1;
       padding: 20px;
 
@@ -200,7 +244,7 @@ onMounted(() => {
           color: #999;
           margin-right: 5px;
 
-          >i {
+          > i {
             width: 0.5em;
             display: inline-block;
           }
@@ -208,7 +252,7 @@ onMounted(() => {
       }
     }
 
-    >a {
+    > a {
       color: $xtxColor;
       width: 160px;
       text-align: center;
@@ -354,7 +398,7 @@ onMounted(() => {
       background: lighten($xtxColor, 50%);
     }
 
-    >ul {
+    > ul {
       padding: 10px;
       font-size: 14px;
       line-height: 30px;
