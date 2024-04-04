@@ -32,6 +32,7 @@ export const useCartStore = defineStore('cart', () => {
             if (item) {
                 item.count++
             } else {
+                console.log(cartList.value)
                 cartList.value.push(goods)
             }
 
