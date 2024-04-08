@@ -4,6 +4,7 @@ import {getLikeListAPI} from "@/apis/user";
 import {ref, onMounted} from 'vue'
 import GoodsItem from "@/views/Home/components/GoodsItem.vue";
 
+
 const userStore = useUserStore()
 
 const likeList = ref([])
