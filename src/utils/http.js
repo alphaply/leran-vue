@@ -28,6 +28,7 @@ httpInstance.interceptors.request.use(config => {
 httpInstance.interceptors.response.use(res => res.data,
     e => {
         //错误提示统一
+        console.log(e.response)
         ElMessage.error(e.response.data.message)
         if (e.response.states === 401) {
             const userStore = useUserStore()
